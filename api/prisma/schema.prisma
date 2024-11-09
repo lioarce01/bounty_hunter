@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  email              String  @unique
+  password           String
+  role               Role    @default(HUNTER)
+  companyName        String?
+  companyDescription String?
+  companyURL         String?
+
+  bounties Bounty[] @relation("UserBounties")
+
+  reports Report[] @relation("UserReports")
+}
+
+model Bounty {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  reward      Int
+  status      BountyStatus @default(OPEN)
+
+  userId  String @db.ObjectId
+  company User   @relation("UserBounties", fields: [userId], references: [id])
+
+  reports Report[] @relation("BountyReports")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Report {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  bountyId String @db.ObjectId
+  bounty   Bounty @relation("BountyReports", fields: [bountyId], references: [id])
+
+  hunterId String @db.ObjectId
+  hunter   User   @relation("UserReports", fields: [hunterId], references: [id])
+
+  details  String
+  evidence String
+  status   ReportStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  COMPANY
+  HUNTER
+  ADMIN
+}
+
+enum ReportStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BountyStatus {
+  OPEN
+  CLOSED
+  EXPIRED
+}
