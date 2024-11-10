@@ -30,7 +30,7 @@ model Bounty {
   status      BountyStatus @default(OPEN)
 
   userId  String @db.ObjectId
-  company User   @relation("UserBounties", fields: [userId], references: [id])
+  company User   @relation("UserBounties", fields: [userId], references: [id], onDelete: Cascade)
 
   reports Report[] @relation("BountyReports")
 
@@ -42,10 +42,10 @@ model Report {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   bountyId String @db.ObjectId
-  bounty   Bounty @relation("BountyReports", fields: [bountyId], references: [id])
+  bounty   Bounty @relation("BountyReports", fields: [bountyId], references: [id], onDelete: Cascade)
 
   hunterId String @db.ObjectId
-  hunter   User   @relation("UserReports", fields: [hunterId], references: [id])
+  hunter   User   @relation("UserReports", fields: [hunterId], references: [id], onDelete: Cascade)
 
   details  String
   evidence String

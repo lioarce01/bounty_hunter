@@ -6,5 +6,9 @@ const userController = new UserController();
 
 router.get("/", userController.getAllUsers);
 router.post("/", userController.createUser);
+router.delete("/:id", userController.deleteUser);
+router.put("/:id/disable", userController.disableUser);
+router.get("/:id", userController.getUserById);
+router.put("/:id/update", userController.updateUser);
 
 export default router;

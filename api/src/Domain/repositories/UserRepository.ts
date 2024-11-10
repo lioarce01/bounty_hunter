@@ -11,5 +11,5 @@ export interface UserRepository {
     user: Prisma.UserUpdateInput
   ): Promise<{ message: string; user: User }>;
   deleteUser(id: string): Promise<{ message: string }>;
-  disableUser(id: string): Promise<User>;
+  disableUser(id: string): Promise<{ message: string }>;
 }

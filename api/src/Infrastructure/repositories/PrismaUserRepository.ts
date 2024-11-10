@@ -95,20 +95,15 @@ export class PrismaUserRepository implements UserRepository {
     };
   }
 
-  async disableUser(id: string): Promise<User> {
+  async disableUser(id: string): Promise<{ message: string }> {
     const disabledUser = await prisma.user.update({
       where: { id },
-      data: { status: UserStatus.DISABLED },
+      data: {
+        status: UserStatus.DISABLED,
+      },
     });
-    return new User(
-      disabledUser.id,
-      disabledUser.name,
-      disabledUser.email,
-      disabledUser.role,
-      disabledUser.status,
-      disabledUser.companyName ?? null,
-      disabledUser.companyDescription ?? null,
-      disabledUser.companyURL ?? null
-    );
+    return {
+      message: "User disabled successfully",
+    };
   }
 }
