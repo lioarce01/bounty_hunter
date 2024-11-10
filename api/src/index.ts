@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "./config/config";
 import errorHandler from "./middleware/errorHandler";
-import router from "./routes";
+import router from "./Infrastructure/http/routes/index";
 
 const app = express();
 
