@@ -32,9 +32,9 @@ class UserController {
   }
 
   async createUser(req: Request, res: Response) {
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -42,7 +42,6 @@ class UserController {
       const newUser = await userService.createUser({
         name,
         email,
-        password,
       });
 
       res.status(201).json({ message: "User created", user: newUser });
@@ -53,17 +52,18 @@ class UserController {
 
   async updateUser(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { name, companyName, companyDescription, companyURL } = req.body;
 
-    if (!id || !name || !email || !password) {
+    if (!id || !name) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     try {
       const updatedUser = await userService.updateUser(id, {
         name,
-        email,
-        password,
+        companyName,
+        companyDescription,
+        companyURL,
       });
 
       res.status(200).json({ message: "User updated", user: updatedUser });

@@ -17,7 +17,7 @@ class UserService {
   }
 
   //CREATE USER
-  async createUser(user: User) {
+  async createUser(user: any) {
     const newUser = await prisma.user.create({
       data: user,
     });
@@ -26,7 +26,7 @@ class UserService {
   }
 
   //UPDATE USER
-  async updateUser(id: string, user: User) {
+  async updateUser(id: string, user: any) {
     const updatedUser = await prisma.user.update({ where: { id }, data: user });
 
     return updatedUser;
