@@ -32,17 +32,17 @@ class BountyService {
     bounty: Bounty,
     userId: string
   ): Promise<{ message: string; bounty: Bounty }> {
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
+
     const newBounty = await prisma.bounty.create({
       data: {
         title: bounty.title,
         description: bounty.description,
         reward: bounty.reward,
         status: BountyStatus.OPEN,
-        company: {
-          connect: {
-            id: userId,
-          },
-        },
+        userId: userId,
       },
     });
 

@@ -3,44 +3,55 @@ import prisma from "../../config/config";
 
 class UserService {
   //GET USERS
-  async getAllUsers() {
+  async getAllUsers(): Promise<User[] | null> {
     const users = await prisma.user.findMany();
 
     return users;
   }
 
   //GET USER BY ID
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<User | null> {
     const user = await prisma.user.findUnique({ where: { id } });
 
     return user;
   }
 
   //CREATE USER
-  async createUser(user: any) {
+  async createUser(user: any): Promise<{ message: string; user: User }> {
     const newUser = await prisma.user.create({
       data: user,
     });
 
-    return newUser;
+    return {
+      message: "User created successfully",
+      user: newUser,
+    };
   }
 
   //UPDATE USER
-  async updateUser(id: string, user: any) {
+  async updateUser(
+    id: string,
+    user: any
+  ): Promise<{ message: string; user: User }> {
     const updatedUser = await prisma.user.update({ where: { id }, data: user });
 
-    return updatedUser;
+    return {
+      message: "User updated successfully",
+      user: updatedUser,
+    };
   }
 
   //DELETE USER
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<{ message: string }> {
     const deletedUser = await prisma.user.delete({ where: { id } });
 
-    return deletedUser;
+    return {
+      message: "User deleted successfully",
+    };
   }
 
   //DISABLE USER
-  async disableUser(id: string) {
+  async disableUser(id: string): Promise<{ message: string; user: User }> {
     const disabledUser = await prisma.user.update({
       where: { id },
       data: {
@@ -48,9 +59,11 @@ class UserService {
       },
     });
 
-    return disabledUser;
+    return {
+      message: "User disabled successfully",
+      user: disabledUser,
+    };
   }
 }
 
-const userService = new UserService();
-export default userService;
+export default UserService;

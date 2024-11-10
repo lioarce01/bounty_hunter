@@ -85,7 +85,7 @@ class BountyController {
   ): Promise<Response | void> {
     try {
       const bountyData = req.body;
-      const { userId } = req.params;
+      const { userId } = req.body;
 
       const { message, bounty } = await this.bountyService.createBounty(
         bountyData,

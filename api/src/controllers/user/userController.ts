@@ -1,37 +1,62 @@
 import { NextFunction, Request, Response } from "express";
-import userService from "../../services/user/userService";
+import UserService from "../../services/user/userService";
 
 class UserController {
-  async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  private userService: UserService;
+
+  constructor() {
+    //INITIALIZE SERVICES
+    this.userService = new UserService();
+
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.getUserById = this.getUserById.bind(this);
+    this.createUser = this.createUser.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.disableUser = this.disableUser.bind(this);
+  }
+
+  //GET ALL USERS
+  public async getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     try {
-      const users = await userService.getAllUsers();
+      const users = await this.userService.getAllUsers();
 
       if (!users || users.length === 0) {
-        return res.status(404).json({ message: "Users not found", users });
+        return res.status(404).json({ message: "Users not found" });
       }
 
-      res.status(200).json({ message: "Users found", users });
+      return res.status(200).json(users);
     } catch (error) {
       next(error);
     }
   }
 
-  async getUserById(req: Request, res: Response) {
+  //GET USER BY ID
+  public async getUserById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     try {
-      const user = await userService.getUserById(id);
+      const user = await this.userService.getUserById(id);
 
       if (!user) {
-        return res.status(404).json({ message: "User not found", user: null });
+        return res.status(404).json({ message: "User not found" });
       }
 
-      res.status(200).json({ message: "User found", user });
+      res.status(200).json(user);
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
     }
   }
 
-  async createUser(req: Request, res: Response) {
+  //CREATE USER
+  public async createUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { name, email } = req.body;
 
     if (!name || !email) {
@@ -39,40 +64,41 @@ class UserController {
     }
 
     try {
-      const newUser = await userService.createUser({
+      const { message, user } = await this.userService.createUser({
         name,
         email,
       });
 
-      res.status(201).json({ message: "User created", user: newUser });
+      res.status(201).json({ message, user });
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
     }
   }
 
-  async updateUser(req: Request, res: Response) {
+  //UPDATE USER
+  public async updateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { id } = req.params;
-    const { name, companyName, companyDescription, companyURL } = req.body;
-
-    if (!id || !name) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+    const userData = req.body;
 
     try {
-      const updatedUser = await userService.updateUser(id, {
-        name,
-        companyName,
-        companyDescription,
-        companyURL,
-      });
+      const { message, user } = await this.userService.updateUser(id, userData);
 
-      res.status(200).json({ message: "User updated", user: updatedUser });
+      res.status(200).json({ message, user });
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
     }
   }
 
-  async deleteUser(req: Request, res: Response) {
+  //DELETE USER
+  public async deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { id } = req.params;
 
     if (!id) {
@@ -80,11 +106,28 @@ class UserController {
     }
 
     try {
-      await userService.deleteUser(id);
+      const { message } = await this.userService.deleteUser(id);
 
-      res.status(200).json({ message: "User deleted successfully" });
+      res.status(200).json(message);
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
+    }
+  }
+
+  //DISABLE USER
+  public async disableUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
+    try {
+      const { id } = req.params;
+
+      const { message, user } = await this.userService.disableUser(id);
+
+      return res.status(200).json({ message, user });
+    } catch (error) {
+      next(error);
     }
   }
 }
