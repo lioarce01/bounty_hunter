@@ -3,21 +3,21 @@ import prisma from "../../config/config";
 
 class BountyService {
   //GET BOUNTIES
-  async getAllBounties() {
+  async getAllBounties(): Promise<Bounty[] | null> {
     const bounties = await prisma.bounty.findMany();
 
     return bounties;
   }
 
   //GET BOUNTY BY ID
-  async getBountyById(id: string) {
+  async getBountyById(id: string): Promise<Bounty | null> {
     const bounty = await prisma.bounty.findUnique({ where: { id } });
 
     return bounty;
   }
 
   //GET BOUNTY BY COMPANY ID (USER ID)
-  async getBountyByCompany(userId: string) {
+  async getBountyByCompanyId(userId: string): Promise<Bounty[] | null> {
     const bounties = await prisma.bounty.findMany({
       where: {
         userId: userId,
@@ -28,7 +28,10 @@ class BountyService {
   }
 
   //CREATE BOUNTY
-  async createBounty(bounty: Bounty, userId: string) {
+  async createBounty(
+    bounty: Bounty,
+    userId: string
+  ): Promise<{ message: string; bounty: Bounty }> {
     const newBounty = await prisma.bounty.create({
       data: {
         title: bounty.title,
@@ -43,11 +46,17 @@ class BountyService {
       },
     });
 
-    return newBounty;
+    return {
+      message: "Bounty created successfully",
+      bounty: newBounty,
+    };
   }
 
   //UPDATE BOUNTY
-  async updateBounty(id: string, bounty: Bounty) {
+  async updateBounty(
+    id: string,
+    bounty: Bounty
+  ): Promise<{ message: string; bounty: Bounty }> {
     const updatedBounty = await prisma.bounty.update({
       where: { id },
       data: {
@@ -57,18 +66,23 @@ class BountyService {
       },
     });
 
-    return updatedBounty;
+    return {
+      message: "Bounty updated successfully",
+      bounty: updatedBounty,
+    };
   }
 
   //DELETE BOUNTY
-  async deleteBounty(id: string) {
+  async deleteBounty(id: string): Promise<{ message: string }> {
     const deletedBounty = await prisma.bounty.delete({ where: { id } });
 
-    return deletedBounty;
+    return {
+      message: "Bounty deleted successfully",
+    };
   }
 
   //CLOSE BOUNTY
-  async closeBounty(id: string) {
+  async closeBounty(id: string): Promise<{ message: string; bounty: Bounty }> {
     const disabledBounty = await prisma.bounty.update({
       where: { id },
       data: {
@@ -76,9 +90,11 @@ class BountyService {
       },
     });
 
-    return disabledBounty;
+    return {
+      message: "Bounty closed successfully",
+      bounty: disabledBounty,
+    };
   }
 }
 
-const bountyService = new BountyService();
-export default bountyService;
+export default BountyService;
