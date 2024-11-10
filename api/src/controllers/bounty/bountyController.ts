@@ -9,7 +9,7 @@ class BountyController {
     this.bountyService = new BountyService();
 
     //BINDING METHODS
-    this.getBounties = this.getBounties.bind(this);
+    this.getAllBounties = this.getAllBounties.bind(this);
     this.getBountyById = this.getBountyById.bind(this);
     this.getBountyByCompanyId = this.getBountyByCompanyId.bind(this);
     this.createBounty = this.createBounty.bind(this);
@@ -19,7 +19,7 @@ class BountyController {
   }
 
   //GET BOUNTIES
-  public async getBounties(
+  public async getAllBounties(
     req: Request,
     res: Response,
     next: NextFunction
@@ -156,5 +156,4 @@ class BountyController {
   }
 }
 
-const bountyController = new BountyController();
-export default bountyController;
+export default BountyController;
