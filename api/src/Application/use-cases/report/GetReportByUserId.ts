@@ -3,7 +3,7 @@ import { Report } from "../../../Domain/entities/Report";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
-export class ReportService {
+export class GetReportByUserId {
   constructor(
     @inject("ReportRepository")
     private reportRepository: ReportRepository

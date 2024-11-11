@@ -1,3 +1,4 @@
+import { ReportStatus } from "@prisma/client";
 import { Report } from "../entities/Report";
 
 export interface ReportRepository {
@@ -10,5 +11,6 @@ export interface ReportRepository {
     report: Partial<Report>
   ): Promise<{ message: string; report: Report }>;
   deleteReport(id: string): Promise<{ message: string }>;
-  closeReport(id: string): Promise<Report>;
+  approveReport(id: string): Promise<{ message: string; report: Report }>;
+  rejectReport(id: string): Promise<{ message: string; report: Report }>;
 }

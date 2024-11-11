@@ -7,7 +7,7 @@ export class Report {
     public evidence: string,
     public status: ReportStatus,
     public bountyId: string,
-    public hunderId: string,
+    public hunterId: string,
     public bounty?: Bounty,
     public hunter?: User
   ) {}

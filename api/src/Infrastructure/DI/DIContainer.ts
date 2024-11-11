@@ -18,6 +18,16 @@ import { CreateBounty } from "../../Application/use-cases/bounty/CreateBounty";
 import { UpdateBounty } from "../../Application/use-cases/bounty/UpdateBounty";
 import { DeleteBounty } from "../../Application/use-cases/bounty/DeleteBounty";
 import { CloseBounty } from "../../Application/use-cases/bounty/CloseBounty";
+import { ReportRepository } from "../../Domain/repositories/ReportRepository";
+import { PrismaReportRepository } from "../repositories/PrismaReportRepository";
+import { GetAllReports } from "../../Application/use-cases/report/GetAllReports";
+import { GetReportById } from "../../Application/use-cases/report/GetReportById";
+import { GetReportByUserId } from "../../Application/use-cases/report/GetReportByUserId";
+import { CreateReport } from "../../Application/use-cases/report/CreateReport";
+import { UpdateReport } from "../../Application/use-cases/report/UpdateReport";
+import { DeleteReport } from "../../Application/use-cases/report/DeleteReport";
+import { ApproveReport } from "../../Application/use-cases/report/ApproveReport";
+import { RejectReport } from "../../Application/use-cases/report/RejectReport";
 
 export function setupContainer() {
   //REGISTER USER REPOSITORY
@@ -30,6 +40,12 @@ export function setupContainer() {
   container.registerSingleton<BountyRepository>(
     "BountyRepository",
     PrismaBountyRepository
+  );
+
+  //REGISTER REPORT REPOSITORY
+  container.registerSingleton<ReportRepository>(
+    "ReportRepository",
+    PrismaReportRepository
   );
 
   //REGISTER USE CASES FOR USERS
@@ -49,4 +65,14 @@ export function setupContainer() {
   container.registerSingleton("UpdateBounty", UpdateBounty);
   container.registerSingleton("DeleteBounty", DeleteBounty);
   container.registerSingleton("CloseBounty", CloseBounty);
+
+  //REGISTER USE CASES FOR REPORTS
+  container.registerSingleton("GetAllReports", GetAllReports);
+  container.registerSingleton("GetReportById", GetReportById);
+  container.registerSingleton("GetReportByUserId", GetReportByUserId);
+  container.registerSingleton("CreateReport", CreateReport);
+  container.registerSingleton("UpdateReport", UpdateReport);
+  container.registerSingleton("DeleteReport", DeleteReport);
+  container.registerSingleton("ApproveReport", ApproveReport);
+  container.registerSingleton("RejectReport", RejectReport);
 }
