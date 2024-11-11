@@ -1,24 +1,24 @@
-import express from "express";
-import cors from "cors";
-import { config } from "./config/config";
-import errorHandler from "./middleware/errorHandler";
-import router from "./Infrastructure/http/routes/index";
+// import express from "express";
+// import cors from "cors";
+// import { config } from "./config/config";
+// import errorHandler from "./middleware/errorHandler";
+// import router from "./Infrastructure/http/routes/index";
 
-const app = express();
+// const app = express();
 
-app.use(cors());
-app.use(express.json());
+// app.use(cors());
+// app.use(express.json());
 
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK", message: "Server is running" });
-});
+// app.get("/health", (req, res) => {
+//   res.status(200).json({ status: "OK", message: "Server is running" });
+// });
 
-app.use("/", router);
+// app.use("/", router);
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
-app.listen(config.port, () => {
-  console.log(`Server is running on port ${config.port}`);
-});
+// app.listen(config.port, () => {
+//   console.log(`Server is running on port ${config.port}`);
+// });
 
-export default app;
+// export default app;
