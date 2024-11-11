@@ -7,21 +7,24 @@ import { CreateBounty } from "../../../Application/use-cases/bounty/CreateBounty
 import { UpdateBounty } from "../../../Application/use-cases/bounty/UpdateBounty";
 import { DeleteBounty } from "../../../Application/use-cases/bounty/DeleteBounty";
 import { CloseBounty } from "../../../Application/use-cases/bounty/CloseBounty";
+import { inject, injectable } from "tsyringe";
 
-const bountyRespository = new PrismaBountyRepository();
-
-const getAllBounties = new GetAllBounties(bountyRespository);
-const getBountyById = new GetBountyById(bountyRespository);
-const getBountyByCompanyId = new GetBountyByCompanyId(bountyRespository);
-const createBounty = new CreateBounty(bountyRespository);
-const updateBounty = new UpdateBounty(bountyRespository);
-const deleteBounty = new DeleteBounty(bountyRespository);
-const closeBounty = new CloseBounty(bountyRespository);
-
+@injectable()
 export class BountyController {
+  constructor(
+    @inject(GetAllBounties) private getAllBountiesUseCase: GetAllBounties,
+    @inject(GetBountyById) private getBountyByIdUseCase: GetBountyById,
+    @inject(GetBountyByCompanyId)
+    private getBountyByCompanyIdUseCase: GetBountyByCompanyId,
+    @inject(CreateBounty) private createBountyUseCase: CreateBounty,
+    @inject(UpdateBounty) private updateBountyUseCase: UpdateBounty,
+    @inject(DeleteBounty) private deleteBountyUseCase: DeleteBounty,
+    @inject(CloseBounty) private closeBountyUseCase: CloseBounty
+  ) {}
+
   async getAllBounties(req: Request, res: Response, next: NextFunction) {
     try {
-      const bounties = await getAllBounties.execute();
+      const bounties = await this.getAllBountiesUseCase.execute();
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
@@ -37,7 +40,7 @@ export class BountyController {
     try {
       const { id } = req.params;
 
-      const bounty = await getBountyById.execute(id);
+      const bounty = await this.getBountyByIdUseCase.execute(id);
 
       if (!bounty) {
         return res.status(404).json({ message: "Bounty not found" });
@@ -53,7 +56,7 @@ export class BountyController {
     try {
       const { id } = req.params;
 
-      const bounties = await getBountyByCompanyId.execute(id);
+      const bounties = await this.getBountyByCompanyIdUseCase.execute(id);
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
@@ -73,7 +76,7 @@ export class BountyController {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const { message, bounty } = await createBounty.execute({
+      const { message, bounty } = await this.createBountyUseCase.execute({
         title,
         description,
         reward,
@@ -98,7 +101,10 @@ export class BountyController {
       const { id } = req.params;
       const { bountyData } = req.body;
 
-      const { message, bounty } = await updateBounty.execute(id, bountyData);
+      const { message, bounty } = await this.updateBountyUseCase.execute(
+        id,
+        bountyData
+      );
 
       res.status(200).json({ message, bounty });
     } catch (error) {
@@ -110,7 +116,7 @@ export class BountyController {
     try {
       const { id } = req.params;
 
-      const { message } = await deleteBounty.execute(id);
+      const { message } = await this.deleteBountyUseCase.execute(id);
 
       res.status(200).json({ message });
     } catch (error) {
@@ -122,7 +128,7 @@ export class BountyController {
     try {
       const { id } = req.params;
 
-      const bounty = await closeBounty.execute(id);
+      const bounty = await this.closeBountyUseCase.execute(id);
 
       res.status(200).json(bounty);
     } catch (error) {

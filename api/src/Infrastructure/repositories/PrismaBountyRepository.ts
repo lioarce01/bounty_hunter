@@ -2,7 +2,9 @@ import { BountyStatus, Role } from "@prisma/client";
 import { Bounty } from "../../Domain/entities/Bounty";
 import { BountyRepository } from "../../Domain/repositories/BountyRepository";
 import prisma from "../../config/config";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class PrismaBountyRepository implements BountyRepository {
   // GET ALL BOUNTIES
   async getAllBounties(): Promise<Bounty[]> {
@@ -26,6 +28,9 @@ export class PrismaBountyRepository implements BountyRepository {
   async getBountyById(id: string): Promise<Bounty | null> {
     const bounty = await prisma.bounty.findUnique({
       where: { id },
+      include: {
+        company: true,
+      },
     });
 
     if (!bounty) return null;
@@ -38,7 +43,8 @@ export class PrismaBountyRepository implements BountyRepository {
       bounty.status,
       bounty.userId,
       bounty.createdAt,
-      bounty.updatedAt
+      bounty.updatedAt,
+      bounty.company
     );
   }
 
