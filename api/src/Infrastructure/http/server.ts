@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { config } from "../../config/config";
 import errorHandler from "../../middleware/errorHandler";
 import router from "../../Infrastructure/http/routes/index";
 
@@ -17,8 +16,4 @@ app.use("/", router);
 
 app.use(errorHandler);
 
-app.listen(config.port, () => {
-  console.log(`Server is running on port ${config.port}`);
-});
-
-export default app;
+export { app };

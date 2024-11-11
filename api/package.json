@@ -2,11 +2,11 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/Infrastructure/http.js",
-    "dev": "nodemon --watch src --ext ts --exec \"npm run build && node dist/Infrastructure/http/server.js\""
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec \"npm run build && node dist/index.js\""
   },
   "keywords": [],
   "author": "",
