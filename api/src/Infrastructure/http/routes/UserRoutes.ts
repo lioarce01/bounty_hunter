@@ -10,5 +10,6 @@ router.delete("/:id", userController.deleteUser);
 router.put("/:id/disable", userController.disableUser);
 router.get("/:id", userController.getUserById);
 router.put("/:id/update", userController.updateUser);
+router.put("/:id/switch-role", userController.switchRole);
 
 export default router;

@@ -12,4 +12,5 @@ export interface UserRepository {
   ): Promise<{ message: string; user: User }>;
   deleteUser(id: string): Promise<{ message: string }>;
   disableUser(id: string): Promise<{ message: string }>;
+  switchRole(id: string): Promise<{ message: string }>;
 }

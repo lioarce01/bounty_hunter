@@ -1,12 +1,19 @@
-import { PrismaClient, Prisma, UserStatus, Role } from "@prisma/client";
+import { Prisma, Role, UserStatus } from "@prisma/client";
 import { UserRepository } from "../../Domain/repositories/UserRepository";
 import { User } from "../../Domain/entities/User";
-
-const prisma = new PrismaClient();
+import prisma from "../../config/config";
 
 export class PrismaUserRepository implements UserRepository {
   async getAllUsers(): Promise<User[]> {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include: {
+        bounties: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
     return users.map(
       (user) =>
         new User(
@@ -17,13 +24,17 @@ export class PrismaUserRepository implements UserRepository {
           user.status,
           user.companyName ?? null,
           user.companyDescription ?? null,
-          user.companyURL ?? null
+          user.companyURL ?? null,
+          user.bounties ?? []
         )
     );
   }
 
   async getUserById(id: string): Promise<User | null> {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: { bounties: true },
+    });
     if (!user) return null;
     return new User(
       user.id,
@@ -33,7 +44,8 @@ export class PrismaUserRepository implements UserRepository {
       user.status,
       user.companyName ?? null,
       user.companyDescription ?? null,
-      user.companyURL ?? null
+      user.companyURL ?? null,
+      user.bounties ?? []
     );
   }
 
@@ -104,6 +116,30 @@ export class PrismaUserRepository implements UserRepository {
     });
     return {
       message: "User disabled successfully",
+    };
+  }
+
+  async switchRole(id: string): Promise<{ message: string }> {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: { role: true },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const newRole = user.role === Role.COMPANY ? Role.HUNTER : Role.COMPANY;
+
+    await prisma.user.update({
+      where: { id },
+      data: {
+        role: newRole,
+      },
+    });
+
+    return {
+      message: "Role switched successfully",
     };
   }
 }

@@ -6,14 +6,17 @@ import { DeleteUser } from "../../../Application/use-cases/user/DeleteUser";
 import { DisableUser } from "../../../Application/use-cases/user/DisableUser";
 import { GetUserById } from "../../../Application/use-cases/user/GetUserById";
 import { UpdateUser } from "../../../Application/use-cases/user/UpdateUser";
+import { SwitchRole } from "../../../Application/use-cases/user/SwitchRole";
 
 const userRepository = new PrismaUserRepository();
+
 const createUserUseCase = new CreateUser(userRepository);
 const getAllUsersUseCase = new GetAllUsers(userRepository);
 const deleteUserUseCase = new DeleteUser(userRepository);
 const disableUserUseCase = new DisableUser(userRepository);
 const getUserByIdUseCase = new GetUserById(userRepository);
 const updateUserUseCase = new UpdateUser(userRepository);
+const switchRoleUseCase = new SwitchRole(userRepository);
 
 export class UserController {
   async getAllUsers(req: Request, res: Response) {
@@ -67,5 +70,13 @@ export class UserController {
     const { message, user } = await updateUserUseCase.execute(id, userData);
 
     res.status(200).json({ message, user });
+  }
+
+  async switchRole(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const { message } = await switchRoleUseCase.execute(id);
+
+    res.status(200).json({ message });
   }
 }
