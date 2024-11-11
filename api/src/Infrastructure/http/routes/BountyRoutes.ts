@@ -1,6 +1,6 @@
 import express from "express";
 import { BountyController } from "../controllers/BountyControllers";
-import { setupContainer } from "../../DI/container";
+import { setupContainer } from "../../DI/DIContainer";
 import { container } from "tsyringe";
 
 setupContainer();

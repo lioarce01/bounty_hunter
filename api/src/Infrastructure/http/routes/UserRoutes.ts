@@ -2,7 +2,7 @@ import "reflect-metadata";
 import express from "express";
 import { container } from "tsyringe";
 import { UserController } from "../controllers/UserController";
-import { setupContainer } from "../../DI/container";
+import { setupContainer } from "../../DI/DIContainer";
 
 setupContainer();
 
