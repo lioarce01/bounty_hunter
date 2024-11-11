@@ -2,7 +2,9 @@ import { Prisma, Role, UserStatus } from "@prisma/client";
 import { UserRepository } from "../../Domain/repositories/UserRepository";
 import { User } from "../../Domain/entities/User";
 import prisma from "../../config/config";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class PrismaUserRepository implements UserRepository {
   async getAllUsers(): Promise<User[]> {
     const users = await prisma.user.findMany({

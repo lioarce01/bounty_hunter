@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./UserRoutes";
 import bountyRoutes from "./BountyRoutes";
+import "reflect-metadata";
 
 const router = express.Router();
 

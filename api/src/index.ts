@@ -1,4 +1,4 @@
-import express from "express";
+import "reflect-metadata";
 import { app } from "./Infrastructure/http/server";
 import { config } from "./config/config";
 

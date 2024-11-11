@@ -1,9 +1,14 @@
 import { Prisma } from "@prisma/client";
 import { User } from "../../../Domain/entities/User";
 import { UserRepository } from "../../../Domain/repositories/UserRepository";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class UpdateUser {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    @inject("UserRepository")
+    private userRepository: UserRepository
+  ) {}
 
   async execute(
     id: string,

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { PrismaUserRepository } from "../../repositories/PrismaUserRepository";
 import { CreateUser } from "../../../Application/use-cases/user/CreateUser";
 import { GetAllUsers } from "../../../Application/use-cases/user/GetAllUsers";
 import { DeleteUser } from "../../../Application/use-cases/user/DeleteUser";
@@ -7,20 +6,22 @@ import { DisableUser } from "../../../Application/use-cases/user/DisableUser";
 import { GetUserById } from "../../../Application/use-cases/user/GetUserById";
 import { UpdateUser } from "../../../Application/use-cases/user/UpdateUser";
 import { SwitchRole } from "../../../Application/use-cases/user/SwitchRole";
+import { inject, injectable } from "tsyringe";
 
-const userRepository = new PrismaUserRepository();
-
-const createUserUseCase = new CreateUser(userRepository);
-const getAllUsersUseCase = new GetAllUsers(userRepository);
-const deleteUserUseCase = new DeleteUser(userRepository);
-const disableUserUseCase = new DisableUser(userRepository);
-const getUserByIdUseCase = new GetUserById(userRepository);
-const updateUserUseCase = new UpdateUser(userRepository);
-const switchRoleUseCase = new SwitchRole(userRepository);
-
+@injectable()
 export class UserController {
+  constructor(
+    @inject(CreateUser) private createUserUseCase: CreateUser,
+    @inject(GetAllUsers) private getAllUsersUseCase: GetAllUsers,
+    @inject(GetUserById) private getUserByIdUseCase: GetUserById,
+    @inject(DeleteUser) private deleteUserUseCase: DeleteUser,
+    @inject(DisableUser) private disableUserUseCase: DisableUser,
+    @inject(UpdateUser) private updateUserUseCase: UpdateUser,
+    @inject(SwitchRole) private switchRoleUseCase: SwitchRole
+  ) {}
+
   async getAllUsers(req: Request, res: Response) {
-    const users = await getAllUsersUseCase.execute();
+    const users = await this.getAllUsersUseCase.execute();
 
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });
@@ -31,14 +32,15 @@ export class UserController {
 
   async createUser(req: Request, res: Response) {
     const { name, email } = req.body;
-    const user = await createUserUseCase.execute({ name, email });
+
+    const user = await this.createUserUseCase.execute({ name, email });
     res.status(201).json(user);
   }
 
   async deleteUser(req: Request, res: Response) {
     const { id } = req.params;
 
-    const { message } = await deleteUserUseCase.execute(id);
+    const { message } = await this.deleteUserUseCase.execute(id);
 
     res.status(200).json({ message });
   }
@@ -46,7 +48,7 @@ export class UserController {
   async disableUser(req: Request, res: Response) {
     const { id } = req.params;
 
-    const { message } = await disableUserUseCase.execute(id);
+    const { message } = await this.disableUserUseCase.execute(id);
 
     res.status(200).json({ message });
   }
@@ -54,7 +56,7 @@ export class UserController {
   async getUserById(req: Request, res: Response) {
     const { id } = req.params;
 
-    const user = await getUserByIdUseCase.execute(id);
+    const user = await this.getUserByIdUseCase.execute(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -67,7 +69,10 @@ export class UserController {
     const { id } = req.params;
     const userData = req.body;
 
-    const { message, user } = await updateUserUseCase.execute(id, userData);
+    const { message, user } = await this.updateUserUseCase.execute(
+      id,
+      userData
+    );
 
     res.status(200).json({ message, user });
   }
@@ -75,7 +80,7 @@ export class UserController {
   async switchRole(req: Request, res: Response) {
     const { id } = req.params;
 
-    const { message } = await switchRoleUseCase.execute(id);
+    const { message } = await this.switchRoleUseCase.execute(id);
 
     res.status(200).json({ message });
   }

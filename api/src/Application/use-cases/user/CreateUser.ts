@@ -1,9 +1,14 @@
 import { UserRepository } from "../../../Domain/repositories/UserRepository";
 import { User } from "../../../Domain/entities/User";
 import { Prisma } from "@prisma/client";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class CreateUser {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    @inject("UserRepository")
+    private userRepository: UserRepository
+  ) {}
 
   async execute(userData: Partial<User>): Promise<User> {
     if (!userData.name || !userData.email) {
