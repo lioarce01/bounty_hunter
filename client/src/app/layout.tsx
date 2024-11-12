@@ -28,6 +28,7 @@ export default function RootLayout({
                   process.env.NEXT_PUBLIC_AUTH0_SCOPE ||
                   "openid profile email offline_access",
               }}
+              cacheLocation="localstorage"
             >
               {children}
             </Auth0Provider>
