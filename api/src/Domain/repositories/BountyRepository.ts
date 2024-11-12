@@ -1,7 +1,8 @@
+import { BountyFilter } from "../../Infrastructure/filters/BountyFilter";
 import { Bounty } from "../entities/Bounty";
 
 export interface BountyRepository {
-  getAllBounties(): Promise<Bounty[]>;
+  getAllBounties(filter?: BountyFilter): Promise<Bounty[]>;
   getBountyById(id: string): Promise<Bounty | null>;
   getBountyByCompanyId(userId: string): Promise<Bounty[] | null>;
   createBounty(

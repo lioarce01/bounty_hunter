@@ -3,12 +3,15 @@ import { Bounty } from "../../Domain/entities/Bounty";
 import { BountyRepository } from "../../Domain/repositories/BountyRepository";
 import prisma from "../../config/config";
 import { injectable } from "tsyringe";
+import { BountyFilter } from "../filters/BountyFilter";
 
 @injectable()
 export class PrismaBountyRepository implements BountyRepository {
   // GET ALL BOUNTIES
-  async getAllBounties(): Promise<Bounty[]> {
+  async getAllBounties(filter?: BountyFilter): Promise<Bounty[]> {
+    const whereClause = filter ? filter.buildWhereClause() : {};
     const bounties = await prisma.bounty.findMany({
+      where: whereClause,
       include: {
         reports: {
           select: {

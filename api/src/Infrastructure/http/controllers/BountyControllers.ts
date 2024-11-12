@@ -7,6 +7,7 @@ import { UpdateBounty } from "../../../Application/use-cases/bounty/UpdateBounty
 import { DeleteBounty } from "../../../Application/use-cases/bounty/DeleteBounty";
 import { CloseBounty } from "../../../Application/use-cases/bounty/CloseBounty";
 import { inject, injectable } from "tsyringe";
+import { BountyStatus } from "@prisma/client";
 
 @injectable()
 export class BountyController {
@@ -23,7 +24,12 @@ export class BountyController {
 
   async getAllBounties(req: Request, res: Response, next: NextFunction) {
     try {
-      const bounties = await this.getAllBountiesUseCase.execute();
+      const { status, category } = req.query;
+      const filters = {
+        status: status as BountyStatus,
+        category: category as string,
+      };
+      const bounties = await this.getAllBountiesUseCase.execute(filters);
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
