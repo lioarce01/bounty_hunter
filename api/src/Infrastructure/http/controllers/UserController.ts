@@ -1,27 +1,33 @@
 import { Request, Response } from "express";
 import { CreateUser } from "../../../Application/use-cases/user/CreateUser";
-import { GetAllUsers } from "../../../Application/use-cases/user/GetAllUsers";
+import { GetFilteredUsers } from "../../../Application/use-cases/user/GetAllUsers";
 import { DeleteUser } from "../../../Application/use-cases/user/DeleteUser";
 import { DisableUser } from "../../../Application/use-cases/user/DisableUser";
 import { GetUserById } from "../../../Application/use-cases/user/GetUserById";
 import { UpdateUser } from "../../../Application/use-cases/user/UpdateUser";
 import { SwitchRole } from "../../../Application/use-cases/user/SwitchRole";
 import { inject, injectable } from "tsyringe";
+import { Role, UserStatus } from "@prisma/client";
 
 @injectable()
 export class UserController {
   constructor(
     @inject(CreateUser) private createUserUseCase: CreateUser,
-    @inject(GetAllUsers) private getAllUsersUseCase: GetAllUsers,
     @inject(GetUserById) private getUserByIdUseCase: GetUserById,
     @inject(DeleteUser) private deleteUserUseCase: DeleteUser,
     @inject(DisableUser) private disableUserUseCase: DisableUser,
     @inject(UpdateUser) private updateUserUseCase: UpdateUser,
-    @inject(SwitchRole) private switchRoleUseCase: SwitchRole
+    @inject(SwitchRole) private switchRoleUseCase: SwitchRole,
+    @inject(GetFilteredUsers) private getFilteredUsersUseCase: GetFilteredUsers
   ) {}
 
   async getAllUsers(req: Request, res: Response) {
-    const users = await this.getAllUsersUseCase.execute();
+    const { role, status } = req.query;
+    const filters = {
+      role: role as Role,
+      status: status as UserStatus,
+    };
+    const users = await this.getFilteredUsersUseCase.execute(filters);
 
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });

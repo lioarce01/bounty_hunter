@@ -1,7 +1,8 @@
 import { User, Prisma } from "@prisma/client";
+import { UserFilter } from "../../Infrastructure/filters/UserFilter";
 
 export interface UserRepository {
-  getAllUsers(): Promise<User[] | null>;
+  getAllUsers(filter?: UserFilter): Promise<User[] | null>;
   getUserById(id: string): Promise<User | null>;
   createUser(
     user: Prisma.UserCreateInput
