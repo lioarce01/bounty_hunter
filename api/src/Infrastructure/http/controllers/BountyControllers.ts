@@ -60,8 +60,17 @@ export class BountyController {
   async getBountyByCompanyId(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const { status, category } = req.query;
 
-      const bounties = await this.getBountyByCompanyIdUseCase.execute(id);
+      const filters = {
+        status: status as BountyStatus,
+        category: category as string,
+      };
+
+      const bounties = await this.getBountyByCompanyIdUseCase.execute(
+        id,
+        filters
+      );
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });

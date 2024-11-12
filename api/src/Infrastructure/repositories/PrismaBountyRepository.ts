@@ -64,9 +64,16 @@ export class PrismaBountyRepository implements BountyRepository {
   }
 
   // GET BOUNTY BY COMPANY ID (USER ID)
-  async getBountyByCompanyId(userId: string): Promise<Bounty[] | null> {
+  async getBountyByCompanyId(
+    userId: string,
+    filter?: BountyFilter
+  ): Promise<Bounty[] | null> {
+    const whereClause = filter ? filter.buildWhereClause() : {};
     const bounties = await prisma.bounty.findMany({
-      where: { userId },
+      where: {
+        userId,
+        ...whereClause,
+      },
     });
 
     if (!bounties || bounties.length === 0) return null;
