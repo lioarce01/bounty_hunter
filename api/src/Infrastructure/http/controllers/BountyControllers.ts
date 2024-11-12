@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { PrismaBountyRepository } from "../../repositories/PrismaBountyRepository";
 import { GetAllBounties } from "../../../Application/use-cases/bounty/GetAllBounties";
 import { GetBountyById } from "../../../Application/use-cases/bounty/GetBountyById";
 import { GetBountyByCompanyId } from "../../../Application/use-cases/bounty/GetBountyByCompanyId";

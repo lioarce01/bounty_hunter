@@ -10,7 +10,7 @@ export class CreateReport {
   ) {}
 
   async execute(
-    reportData: Report
+    reportData: Partial<Report>
   ): Promise<{ message: string; report: Report }> {
     const { message, report } = await this.reportRepository.createReport(
       reportData
