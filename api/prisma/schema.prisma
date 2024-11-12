@@ -32,10 +32,9 @@ model Bounty {
   userId  String @db.ObjectId
   company User   @relation("UserBounties", fields: [userId], references: [id], onDelete: Cascade)
 
-  reports Report[] @relation("BountyReports")
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  reports   Report[] @relation("BountyReports")
 }
 
 model Report {

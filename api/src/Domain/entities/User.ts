@@ -1,4 +1,4 @@
-import { Bounty, Role, UserStatus, Report, BountyStatus } from "@prisma/client";
+import { Role, UserStatus, Report, BountyStatus } from "@prisma/client";
 
 export class User {
   constructor(
@@ -21,6 +21,6 @@ export class User {
           createdAt: Date;
           updatedAt: Date;
         }[],
-    public reports?: Report[] | []
+    public reports?: { id: string }[] | Report[]
   ) {}
 }

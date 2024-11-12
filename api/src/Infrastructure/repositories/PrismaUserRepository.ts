@@ -10,6 +10,9 @@ export class PrismaUserRepository implements UserRepository {
     const users = await prisma.user.findMany({
       include: {
         bounties: {
+          select: { id: true },
+        },
+        reports: {
           select: {
             id: true,
           },
@@ -27,7 +30,8 @@ export class PrismaUserRepository implements UserRepository {
           user.companyName ?? null,
           user.companyDescription ?? null,
           user.companyURL ?? null,
-          user.bounties ?? []
+          user.bounties ?? [],
+          user.reports ?? []
         )
     );
   }
@@ -35,7 +39,7 @@ export class PrismaUserRepository implements UserRepository {
   async getUserById(id: string): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: { id },
-      include: { bounties: true },
+      include: { bounties: true, reports: true },
     });
     if (!user) return null;
     return new User(
@@ -47,7 +51,8 @@ export class PrismaUserRepository implements UserRepository {
       user.companyName ?? null,
       user.companyDescription ?? null,
       user.companyURL ?? null,
-      user.bounties ?? []
+      user.bounties ?? [],
+      user.reports ?? []
     );
   }
 

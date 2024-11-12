@@ -8,7 +8,15 @@ import { injectable } from "tsyringe";
 export class PrismaBountyRepository implements BountyRepository {
   // GET ALL BOUNTIES
   async getAllBounties(): Promise<Bounty[]> {
-    const bounties = await prisma.bounty.findMany();
+    const bounties = await prisma.bounty.findMany({
+      include: {
+        reports: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
     return bounties.map(
       (bounty) =>
         new Bounty(
@@ -30,6 +38,7 @@ export class PrismaBountyRepository implements BountyRepository {
       where: { id },
       include: {
         company: true,
+        reports: true,
       },
     });
 
@@ -44,7 +53,8 @@ export class PrismaBountyRepository implements BountyRepository {
       bounty.userId,
       bounty.createdAt,
       bounty.updatedAt,
-      bounty.company
+      bounty.company,
+      bounty.reports
     );
   }
 

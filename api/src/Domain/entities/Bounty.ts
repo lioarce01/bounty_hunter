@@ -1,4 +1,4 @@
-import { BountyStatus, User } from "@prisma/client";
+import { BountyStatus, User, Report } from "@prisma/client";
 
 export class Bounty {
   constructor(
@@ -10,7 +10,8 @@ export class Bounty {
     public userId: string,
     public createdAt: Date,
     public updatedAt: Date,
-    public company?: User
+    public company?: User,
+    public reports?: { id: string }[] | Report[]
   ) {}
 
   close(): void {

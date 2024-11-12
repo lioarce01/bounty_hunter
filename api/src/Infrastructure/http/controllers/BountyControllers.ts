@@ -98,12 +98,13 @@ export class BountyController {
   async updateBounty(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { bountyData } = req.body;
+      const { title, description, reward } = req.body;
 
-      const { message, bounty } = await this.updateBountyUseCase.execute(
-        id,
-        bountyData
-      );
+      const { message, bounty } = await this.updateBountyUseCase.execute(id, {
+        title,
+        description,
+        reward,
+      });
 
       res.status(200).json({ message, bounty });
     } catch (error) {

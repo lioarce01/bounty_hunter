@@ -91,12 +91,12 @@ export class ReportController {
   async updateReport(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { reportData } = req.body;
+      const { details, evidence } = req.body;
 
-      const { message, report } = await this.updateReportUseCase.execute(
-        id,
-        reportData
-      );
+      const { message, report } = await this.updateReportUseCase.execute(id, {
+        details,
+        evidence,
+      });
 
       res.status(200).json({ message, report });
     } catch (error) {

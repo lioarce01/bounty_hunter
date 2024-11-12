@@ -27,7 +27,7 @@ router.put("/:id", (req, res, next) =>
 router.delete("/:id", (req, res, next) =>
   bountyController.deleteBounty(req, res, next)
 );
-router.put("/:id", (req, res, next) =>
+router.put("/:id/close", (req, res, next) =>
   bountyController.closeBounty(req, res, next)
 );
 
