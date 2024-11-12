@@ -23,7 +23,7 @@ const HeroLanding = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="text-gray-100 bg-black px-8 py-4 text-xl font-semibold border-neutral-800"
+                  className="text-gray-100 bg-black px-8 py-4 text-xl font-semibold border-neutral-800 transitiona-all duration-300"
                 >
                   Learn More
                 </Button>
@@ -36,7 +36,7 @@ const HeroLanding = () => {
                   src="/illustration1.png"
                   alt="Cybersecurity Illustration"
                   className="relative z-10 mx-auto hidden md:block"
-                  width={400}
+                  width={350}
                   height={300}
                 />
               </div>

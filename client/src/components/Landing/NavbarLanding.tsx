@@ -13,31 +13,25 @@ const NavbarLanding = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="#"
-              className="text-lg hover:text-zinc-300 transition-colors"
-            >
-              Platform
-            </Link>
-            <Link
-              href="#"
-              className="text-lg hover:text-zinc-300 transition-colors"
+              className="text-lg hover:text-neutral-300 transition-colors"
             >
               Bounties
             </Link>
             <Link
               href="#"
-              className="text-lg hover:text-zinc-300 transition-colors"
+              className="text-lg hover:text-neutral-300 transition-colors"
             >
               Leaderboard
             </Link>
             <Link
               href="#"
-              className="text-lg hover:text-zinc-300 transition-colors"
+              className="text-lg hover:text-neutral-300 transition-colors"
             >
               About
             </Link>
           </div>
-          <Button className="bg-zinc-100 text-black hover:bg-zinc-200 px-6 py-2 text-lg font-semibold">
-            Get Started
+          <Button className="bg-neutral-100 text-black hover:bg-neutral-200 px-6 py-2 text-lg font-semibold">
+            Login
           </Button>
         </nav>
       </header>

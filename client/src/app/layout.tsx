@@ -5,6 +5,14 @@ import "./globals.css";
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { Kanit } from "next/font/google";
+
+const kanit = Kanit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-kanit",
+  weight: ["200", "300", "400", "500", "600", "700"],
+});
 
 export default function RootLayout({
   children,
@@ -14,7 +22,7 @@ export default function RootLayout({
   const redirectUri =
     typeof window !== "undefined" ? window.location.origin : "";
   return (
-    <html lang="en">
+    <html lang="en" className={kanit.variable}>
       <body>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
