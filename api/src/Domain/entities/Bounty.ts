@@ -7,6 +7,7 @@ export class Bounty {
     public description: string,
     public reward: number,
     public status: BountyStatus,
+    public category: string,
     public userId: string,
     public createdAt: Date,
     public updatedAt: Date,

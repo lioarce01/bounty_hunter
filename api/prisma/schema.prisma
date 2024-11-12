@@ -28,6 +28,7 @@ model Bounty {
   description String
   reward      Int
   status      BountyStatus @default(OPEN)
+  category String
 
   userId  String @db.ObjectId
   company User   @relation("UserBounties", fields: [userId], references: [id], onDelete: Cascade)

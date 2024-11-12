@@ -25,6 +25,7 @@ export class PrismaBountyRepository implements BountyRepository {
           bounty.description,
           bounty.reward,
           bounty.status,
+          bounty.category,
           bounty.userId,
           bounty.createdAt,
           bounty.updatedAt
@@ -50,6 +51,7 @@ export class PrismaBountyRepository implements BountyRepository {
       bounty.description,
       bounty.reward,
       bounty.status,
+      bounty.category,
       bounty.userId,
       bounty.createdAt,
       bounty.updatedAt,
@@ -74,6 +76,7 @@ export class PrismaBountyRepository implements BountyRepository {
           bounty.description,
           bounty.reward,
           bounty.status,
+          bounty.category,
           bounty.userId,
           bounty.createdAt,
           bounty.updatedAt
@@ -89,7 +92,8 @@ export class PrismaBountyRepository implements BountyRepository {
       !bountyData.title ||
       !bountyData.description ||
       !bountyData.reward ||
-      !bountyData.userId
+      !bountyData.userId ||
+      !bountyData.category
     ) {
       throw new Error("Missing required fields");
     }
@@ -112,7 +116,7 @@ export class PrismaBountyRepository implements BountyRepository {
         title: bountyData.title!,
         description: bountyData.description!,
         reward: bountyData.reward!,
-        status: BountyStatus.OPEN,
+        category: bountyData.category!,
         userId: bountyData.userId!,
       },
     });
@@ -125,6 +129,7 @@ export class PrismaBountyRepository implements BountyRepository {
         newBounty.description,
         newBounty.reward,
         newBounty.status,
+        newBounty.category,
         newBounty.userId,
         newBounty.createdAt,
         newBounty.updatedAt
@@ -155,6 +160,7 @@ export class PrismaBountyRepository implements BountyRepository {
         updatedBounty.description,
         updatedBounty.reward,
         updatedBounty.status,
+        updatedBounty.category,
         updatedBounty.userId,
         updatedBounty.createdAt,
         updatedBounty.updatedAt
@@ -186,6 +192,7 @@ export class PrismaBountyRepository implements BountyRepository {
       closedBounty.description,
       closedBounty.reward,
       closedBounty.status,
+      closedBounty.category,
       closedBounty.userId,
       closedBounty.createdAt,
       closedBounty.updatedAt

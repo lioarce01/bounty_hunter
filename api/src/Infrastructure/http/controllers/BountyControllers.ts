@@ -69,7 +69,7 @@ export class BountyController {
 
   async createBounty(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, reward, userId } = req.body;
+      const { title, description, reward, userId, category } = req.body;
 
       if (!title || !description || !reward || !userId) {
         return res.status(400).json({ message: "Missing required fields" });
@@ -80,6 +80,7 @@ export class BountyController {
         description,
         reward,
         userId,
+        category,
       });
 
       res.status(201).json({ message, bounty });
