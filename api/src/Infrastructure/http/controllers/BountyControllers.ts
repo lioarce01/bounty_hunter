@@ -24,7 +24,7 @@ export class BountyController {
 
   async getAllBounties(req: Request, res: Response, next: NextFunction) {
     try {
-      const { status, category, sortBy, sortOrder } = req.query;
+      const { status, category, sortBy, sortOrder, offset, limit } = req.query;
 
       const filters = {
         status: status as BountyStatus,
@@ -36,9 +36,20 @@ export class BountyController {
         sortOrder: sortOrder as "asc" | "desc",
       };
 
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
       const bounties = await this.getAllBountiesUseCase.execute(
         filters,
-        sortOptions
+        sortOptions,
+        parsedOffset,
+        parsedLimit
       );
 
       if (!bounties || bounties.length === 0) {
@@ -70,7 +81,7 @@ export class BountyController {
   async getBountyByCompanyId(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { status, category, sortBy, sortOrder } = req.query;
+      const { status, category, sortBy, sortOrder, offset, limit } = req.query;
 
       const filters = {
         status: status as BountyStatus,
@@ -82,10 +93,21 @@ export class BountyController {
         sortOrder: sortOrder as "asc" | "desc",
       };
 
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
       const bounties = await this.getBountyByCompanyIdUseCase.execute(
         id,
         filters,
-        sortOptions
+        sortOptions,
+        parsedOffset,
+        parsedLimit
       );
 
       if (!bounties || bounties.length === 0) {

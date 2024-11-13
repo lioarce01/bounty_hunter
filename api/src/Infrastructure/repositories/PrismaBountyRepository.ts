@@ -8,12 +8,18 @@ import { BountyFilter } from "../filters/BountyFilter";
 @injectable()
 export class PrismaBountyRepository implements BountyRepository {
   // GET ALL BOUNTIES
-  async getAllBounties(filter?: BountyFilter): Promise<Bounty[]> {
+  async getAllBounties(
+    filter?: BountyFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<Bounty[]> {
     const whereClause = filter ? filter.buildWhereClause() : {};
     const orderByClause = filter ? filter.buildOrderByClause() : {};
     const bounties = await prisma.bounty.findMany({
       where: whereClause,
       orderBy: orderByClause,
+      ...(typeof offset !== "undefined" && { skip: offset }),
+      ...(typeof limit !== "undefined" && { take: limit }),
       include: {
         reports: {
           select: {
@@ -68,7 +74,9 @@ export class PrismaBountyRepository implements BountyRepository {
   // GET BOUNTY BY COMPANY ID (USER ID)
   async getBountyByCompanyId(
     userId: string,
-    filter?: BountyFilter
+    filter?: BountyFilter,
+    offset?: number,
+    limit?: number
   ): Promise<Bounty[] | null> {
     const whereClause = filter ? filter.buildWhereClause() : {};
     const orderByClause = filter ? filter.buildOrderByClause() : {};
@@ -77,7 +85,8 @@ export class PrismaBountyRepository implements BountyRepository {
         userId,
         ...whereClause,
       },
-      orderBy: orderByClause,
+      ...(typeof offset !== "undefined" && { skip: offset }),
+      ...(typeof limit !== "undefined" && { take: limit }),
     });
 
     if (!bounties || bounties.length === 0) return null;

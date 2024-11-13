@@ -17,12 +17,16 @@ export class GetBountyByCompanyId {
   async execute(
     id: string,
     filters?: BountyFilters,
-    sortOptions?: BountySortOptions
+    sortOptions?: BountySortOptions,
+    offset?: number,
+    limit?: number
   ): Promise<Bounty[] | null> {
     const filter = new BountyFilter(filters, sortOptions);
     const bounties = await this.bountyRepository.getBountyByCompanyId(
       id,
-      filter
+      filter,
+      offset,
+      limit
     );
     return bounties;
   }

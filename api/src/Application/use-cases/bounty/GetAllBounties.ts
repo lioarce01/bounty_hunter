@@ -16,10 +16,16 @@ export class GetAllBounties {
 
   async execute(
     filters?: BountyFilters,
-    sortOptions?: BountySortOptions
+    sortOptions?: BountySortOptions,
+    offset?: number,
+    limit?: number
   ): Promise<Bounty[]> {
     const filter = new BountyFilter(filters, sortOptions);
-    const bounties = await this.bountyRepository.getAllBounties(filter);
+    const bounties = await this.bountyRepository.getAllBounties(
+      filter,
+      offset,
+      limit
+    );
     return bounties;
   }
 }
