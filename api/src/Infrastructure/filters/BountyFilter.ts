@@ -5,10 +5,18 @@ export interface BountyFilters {
   category?: string;
 }
 
+export interface BountySortOptions {
+  sortBy?: "reward";
+  sortOrder?: "asc" | "desc";
+}
+
 export class BountyFilter {
   private filters: BountyFilters = {};
-  constructor(filters?: BountyFilters) {
+  private sortOptions: BountySortOptions = {};
+
+  constructor(filters?: BountyFilters, sortOptions?: BountySortOptions) {
     this.filters = filters || {};
+    this.sortOptions = sortOptions || {};
   }
 
   public buildWhereClause(): Prisma.BountyWhereInput {
@@ -23,5 +31,16 @@ export class BountyFilter {
     }
 
     return whereClause;
+  }
+
+  public buildOrderByClause(): Prisma.BountyOrderByWithRelationInput {
+    const { sortBy, sortOrder } = this.sortOptions;
+    const orderByClause: Prisma.BountyOrderByWithRelationInput = {};
+
+    if (sortBy === "reward") {
+      orderByClause.reward = sortOrder || "asc";
+    }
+
+    return orderByClause;
   }
 }

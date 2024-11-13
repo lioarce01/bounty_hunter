@@ -24,12 +24,22 @@ export class BountyController {
 
   async getAllBounties(req: Request, res: Response, next: NextFunction) {
     try {
-      const { status, category } = req.query;
+      const { status, category, sortBy, sortOrder } = req.query;
+
       const filters = {
         status: status as BountyStatus,
         category: category as string,
       };
-      const bounties = await this.getAllBountiesUseCase.execute(filters);
+
+      const sortOptions = {
+        sortBy: sortBy as "reward",
+        sortOrder: sortOrder as "asc" | "desc",
+      };
+
+      const bounties = await this.getAllBountiesUseCase.execute(
+        filters,
+        sortOptions
+      );
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
@@ -60,16 +70,22 @@ export class BountyController {
   async getBountyByCompanyId(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { status, category } = req.query;
+      const { status, category, sortBy, sortOrder } = req.query;
 
       const filters = {
         status: status as BountyStatus,
         category: category as string,
       };
 
+      const sortOptions = {
+        sortBy: sortBy as "reward",
+        sortOrder: sortOrder as "asc" | "desc",
+      };
+
       const bounties = await this.getBountyByCompanyIdUseCase.execute(
         id,
-        filters
+        filters,
+        sortOptions
       );
 
       if (!bounties || bounties.length === 0) {

@@ -10,8 +10,10 @@ export class PrismaBountyRepository implements BountyRepository {
   // GET ALL BOUNTIES
   async getAllBounties(filter?: BountyFilter): Promise<Bounty[]> {
     const whereClause = filter ? filter.buildWhereClause() : {};
+    const orderByClause = filter ? filter.buildOrderByClause() : {};
     const bounties = await prisma.bounty.findMany({
       where: whereClause,
+      orderBy: orderByClause,
       include: {
         reports: {
           select: {
@@ -69,11 +71,13 @@ export class PrismaBountyRepository implements BountyRepository {
     filter?: BountyFilter
   ): Promise<Bounty[] | null> {
     const whereClause = filter ? filter.buildWhereClause() : {};
+    const orderByClause = filter ? filter.buildOrderByClause() : {};
     const bounties = await prisma.bounty.findMany({
       where: {
         userId,
         ...whereClause,
       },
+      orderBy: orderByClause,
     });
 
     if (!bounties || bounties.length === 0) return null;
