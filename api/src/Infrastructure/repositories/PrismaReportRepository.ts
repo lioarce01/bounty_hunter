@@ -3,12 +3,16 @@ import { Report } from "../../Domain/entities/Report";
 import { ReportRepository } from "../../Domain/repositories/ReportRepository";
 import prisma from "../../config/config";
 import { injectable } from "tsyringe";
+import { ReportFilter } from "../filters/ReportFilter";
 
 @injectable()
 export class PrismaReportRepository implements ReportRepository {
   //GET ALL REPORTS
-  async getAllReports(): Promise<Report[]> {
-    const reports = await prisma.report.findMany();
+  async getAllReports(filter?: ReportFilter): Promise<Report[]> {
+    const whereClause = filter ? filter.buildWhereClause() : {};
+    const reports = await prisma.report.findMany({
+      where: whereClause,
+    });
 
     return reports.map(
       (report) =>

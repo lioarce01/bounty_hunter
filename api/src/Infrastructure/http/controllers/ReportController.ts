@@ -8,6 +8,7 @@ import { DeleteReport } from "../../../Application/use-cases/report/DeleteReport
 import { ApproveReport } from "../../../Application/use-cases/report/ApproveReport";
 import { RejectReport } from "../../../Application/use-cases/report/RejectReport";
 import { inject, injectable } from "tsyringe";
+import { ReportStatus } from "@prisma/client";
 
 @injectable()
 export class ReportController {
@@ -25,7 +26,11 @@ export class ReportController {
 
   async getAllReports(req: Request, res: Response, next: NextFunction) {
     try {
-      const reports = await this.getAllReportsUseCase.execute();
+      const { status } = req.query;
+      const filters = {
+        status: status as ReportStatus,
+      };
+      const reports = await this.getAllReportsUseCase.execute(filters);
 
       if (!reports || reports.length === 0) {
         return res.status(404).json({ message: "No reports found" });

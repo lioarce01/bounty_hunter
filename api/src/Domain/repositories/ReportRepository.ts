@@ -1,8 +1,9 @@
 import { ReportStatus } from "@prisma/client";
 import { Report } from "../entities/Report";
+import { ReportFilter } from "../../Infrastructure/filters/ReportFilter";
 
 export interface ReportRepository {
-  getAllReports(): Promise<Report[]>;
+  getAllReports(filter?: ReportFilter): Promise<Report[]>;
   getReportById(id: string): Promise<Report | null>;
   getReportByUserId(userId: string): Promise<Report[] | null>;
   createReport(
