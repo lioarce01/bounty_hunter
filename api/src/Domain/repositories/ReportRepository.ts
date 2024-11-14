@@ -3,9 +3,17 @@ import { Report } from "../entities/Report";
 import { ReportFilter } from "../../Infrastructure/filters/ReportFilter";
 
 export interface ReportRepository {
-  getAllReports(filter?: ReportFilter): Promise<Report[]>;
+  getAllReports(
+    filter?: ReportFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[]>;
   getReportById(id: string): Promise<Report | null>;
-  getReportByUserId(userId: string): Promise<Report[] | null>;
+  getReportByUserId(
+    userId: string,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[] | null>;
   createReport(
     report: Partial<Report>
   ): Promise<{ message: string; report: Report }>;

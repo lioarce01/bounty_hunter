@@ -13,8 +13,12 @@ export class GetAllReports {
     private reportRepository: ReportRepository
   ) {}
 
-  async execute(filters?: ReportFilters): Promise<Report[]> {
+  async execute(
+    filters?: ReportFilters,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[]> {
     const filter = new ReportFilter(filters);
-    return this.reportRepository.getAllReports(filter);
+    return this.reportRepository.getAllReports(filter, offset, limit);
   }
 }

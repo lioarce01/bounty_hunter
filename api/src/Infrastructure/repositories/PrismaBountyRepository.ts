@@ -79,7 +79,6 @@ export class PrismaBountyRepository implements BountyRepository {
     limit?: number
   ): Promise<Bounty[] | null> {
     const whereClause = filter ? filter.buildWhereClause() : {};
-    const orderByClause = filter ? filter.buildOrderByClause() : {};
     const bounties = await prisma.bounty.findMany({
       where: {
         userId,

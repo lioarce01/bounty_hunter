@@ -22,12 +22,27 @@ export class UserController {
   ) {}
 
   async getAllUsers(req: Request, res: Response) {
-    const { role, status } = req.query;
+    const { role, status, offset, limit } = req.query;
+
     const filters = {
       role: role as Role,
       status: status as UserStatus,
     };
-    const users = await this.getFilteredUsersUseCase.execute(filters);
+
+    const parsedOffset =
+      typeof offset === "string" && offset.trim() !== ""
+        ? Number(offset)
+        : undefined;
+    const parsedLimit =
+      typeof limit === "string" && limit.trim() !== ""
+        ? Number(limit)
+        : undefined;
+
+    const users = await this.getFilteredUsersUseCase.execute(
+      filters,
+      parsedOffset,
+      parsedLimit
+    );
 
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });

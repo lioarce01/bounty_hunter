@@ -13,9 +13,13 @@ export class GetFilteredUsers {
     private userRepository: UserRepository
   ) {}
 
-  async execute(filters?: UserFilters): Promise<User[] | null> {
+  async execute(
+    filters?: UserFilters,
+    offset?: number,
+    limit?: number
+  ): Promise<User[] | null> {
     const filter = new UserFilter(filters);
-    const users = await this.userRepository.getAllUsers(filter);
+    const users = await this.userRepository.getAllUsers(filter, offset, limit);
     return users;
   }
 }
