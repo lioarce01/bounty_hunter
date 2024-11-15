@@ -7,6 +7,7 @@ import { UpdateBounty } from "../../../Application/use-cases/bounty/UpdateBounty
 import { DeleteBounty } from "../../../Application/use-cases/bounty/DeleteBounty";
 import { CloseBounty } from "../../../Application/use-cases/bounty/CloseBounty";
 import { inject, injectable } from "tsyringe";
+import { BountyStatus } from "@prisma/client";
 
 @injectable()
 export class BountyController {
@@ -23,7 +24,33 @@ export class BountyController {
 
   async getAllBounties(req: Request, res: Response, next: NextFunction) {
     try {
-      const bounties = await this.getAllBountiesUseCase.execute();
+      const { status, category, sortBy, sortOrder, offset, limit } = req.query;
+
+      const filters = {
+        status: status as BountyStatus,
+        category: category as string,
+      };
+
+      const sortOptions = {
+        sortBy: sortBy as "reward",
+        sortOrder: sortOrder as "asc" | "desc",
+      };
+
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
+      const bounties = await this.getAllBountiesUseCase.execute(
+        filters,
+        sortOptions,
+        parsedOffset,
+        parsedLimit
+      );
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
@@ -54,8 +81,34 @@ export class BountyController {
   async getBountyByCompanyId(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const { status, category, sortBy, sortOrder, offset, limit } = req.query;
 
-      const bounties = await this.getBountyByCompanyIdUseCase.execute(id);
+      const filters = {
+        status: status as BountyStatus,
+        category: category as string,
+      };
+
+      const sortOptions = {
+        sortBy: sortBy as "reward",
+        sortOrder: sortOrder as "asc" | "desc",
+      };
+
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
+      const bounties = await this.getBountyByCompanyIdUseCase.execute(
+        id,
+        filters,
+        sortOptions,
+        parsedOffset,
+        parsedLimit
+      );
 
       if (!bounties || bounties.length === 0) {
         return res.status(404).json({ message: "No bounties found" });
@@ -69,7 +122,7 @@ export class BountyController {
 
   async createBounty(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, reward, userId } = req.body;
+      const { title, description, reward, userId, category } = req.body;
 
       if (!title || !description || !reward || !userId) {
         return res.status(400).json({ message: "Missing required fields" });
@@ -80,6 +133,7 @@ export class BountyController {
         description,
         reward,
         userId,
+        category,
       });
 
       res.status(201).json({ message, bounty });

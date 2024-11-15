@@ -1,6 +1,11 @@
 import { BountyRepository } from "../../../Domain/repositories/BountyRepository";
 import { Bounty } from "../../../Domain/entities/Bounty";
 import { inject, injectable } from "tsyringe";
+import {
+  BountyFilter,
+  BountyFilters,
+  BountySortOptions,
+} from "../../../Infrastructure/filters/BountyFilter";
 
 @injectable()
 export class GetAllBounties {
@@ -9,8 +14,18 @@ export class GetAllBounties {
     private bountyRepository: BountyRepository
   ) {}
 
-  async execute(): Promise<Bounty[]> {
-    const bounties = await this.bountyRepository.getAllBounties();
+  async execute(
+    filters?: BountyFilters,
+    sortOptions?: BountySortOptions,
+    offset?: number,
+    limit?: number
+  ): Promise<Bounty[]> {
+    const filter = new BountyFilter(filters, sortOptions);
+    const bounties = await this.bountyRepository.getAllBounties(
+      filter,
+      offset,
+      limit
+    );
     return bounties;
   }
 }

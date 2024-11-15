@@ -1,13 +1,20 @@
 import { Prisma, Role, UserStatus } from "@prisma/client";
 import { UserRepository } from "../../Domain/repositories/UserRepository";
 import { User } from "../../Domain/entities/User";
+import { UserFilter } from "../filters/UserFilter";
 import prisma from "../../config/config";
 import { injectable } from "tsyringe";
 
 @injectable()
 export class PrismaUserRepository implements UserRepository {
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(
+    filter?: UserFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<User[]> {
+    const whereClause = filter ? filter.buildWhereClause() : {};
     const users = await prisma.user.findMany({
+      where: whereClause,
       include: {
         bounties: {
           select: { id: true },
@@ -18,6 +25,8 @@ export class PrismaUserRepository implements UserRepository {
           },
         },
       },
+      ...(typeof offset !== "undefined" && { skip: offset }),
+      ...(typeof limit !== "undefined" && { take: limit }),
     });
     return users.map(
       (user) =>

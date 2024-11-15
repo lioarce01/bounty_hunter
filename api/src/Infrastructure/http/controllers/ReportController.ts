@@ -8,6 +8,7 @@ import { DeleteReport } from "../../../Application/use-cases/report/DeleteReport
 import { ApproveReport } from "../../../Application/use-cases/report/ApproveReport";
 import { RejectReport } from "../../../Application/use-cases/report/RejectReport";
 import { inject, injectable } from "tsyringe";
+import { ReportStatus } from "@prisma/client";
 
 @injectable()
 export class ReportController {
@@ -25,7 +26,25 @@ export class ReportController {
 
   async getAllReports(req: Request, res: Response, next: NextFunction) {
     try {
-      const reports = await this.getAllReportsUseCase.execute();
+      const { status, offset, limit } = req.query;
+      const filters = {
+        status: status as ReportStatus,
+      };
+
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
+      const reports = await this.getAllReportsUseCase.execute(
+        filters,
+        parsedOffset,
+        parsedLimit
+      );
 
       if (!reports || reports.length === 0) {
         return res.status(404).json({ message: "No reports found" });
@@ -54,8 +73,22 @@ export class ReportController {
 
   async getReportByUserId(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.params;
-      const reports = await this.getReportByUserIdUseCase.execute(userId);
+      const { userId, offset, limit } = req.params;
+
+      const parsedOffset =
+        typeof offset === "string" && offset.trim() !== ""
+          ? Number(offset)
+          : undefined;
+      const parsedLimit =
+        typeof limit === "string" && limit.trim() !== ""
+          ? Number(limit)
+          : undefined;
+
+      const reports = await this.getReportByUserIdUseCase.execute(
+        userId,
+        parsedOffset,
+        parsedLimit
+      );
 
       if (!reports || reports.length === 0) {
         return res.status(404).json({ message: "No reports found" });

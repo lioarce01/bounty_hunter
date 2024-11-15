@@ -3,12 +3,22 @@ import { Report } from "../../Domain/entities/Report";
 import { ReportRepository } from "../../Domain/repositories/ReportRepository";
 import prisma from "../../config/config";
 import { injectable } from "tsyringe";
+import { ReportFilter } from "../filters/ReportFilter";
 
 @injectable()
 export class PrismaReportRepository implements ReportRepository {
   //GET ALL REPORTS
-  async getAllReports(): Promise<Report[]> {
-    const reports = await prisma.report.findMany();
+  async getAllReports(
+    filter?: ReportFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[]> {
+    const whereClause = filter ? filter.buildWhereClause() : {};
+    const reports = await prisma.report.findMany({
+      where: whereClause,
+      ...(typeof offset !== "undefined" && { skip: offset }),
+      ...(typeof limit !== "undefined" && { take: limit }),
+    });
 
     return reports.map(
       (report) =>
@@ -47,11 +57,17 @@ export class PrismaReportRepository implements ReportRepository {
   }
 
   //GET REPORT BY USER ID
-  async getReportByUserId(userId: string): Promise<Report[] | null> {
+  async getReportByUserId(
+    userId: string,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[] | null> {
     const reports = await prisma.report.findMany({
       where: {
         hunterId: userId,
       },
+      ...(typeof offset !== "undefined" && { skip: offset }),
+      ...(typeof limit !== "undefined" && { take: limit }),
     });
 
     if (!reports || reports.length === 0) return null;

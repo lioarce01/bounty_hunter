@@ -1,9 +1,19 @@
+import { BountyFilter } from "../../Infrastructure/filters/BountyFilter";
 import { Bounty } from "../entities/Bounty";
 
 export interface BountyRepository {
-  getAllBounties(): Promise<Bounty[]>;
+  getAllBounties(
+    filter?: BountyFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<Bounty[]>;
   getBountyById(id: string): Promise<Bounty | null>;
-  getBountyByCompanyId(userId: string): Promise<Bounty[] | null>;
+  getBountyByCompanyId(
+    userId: string,
+    filter?: BountyFilter,
+    offset?: number,
+    limit?: number
+  ): Promise<Bounty[] | null>;
   createBounty(
     bounty: Partial<Bounty>
   ): Promise<{ message: string; bounty: Bounty }>;

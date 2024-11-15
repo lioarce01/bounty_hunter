@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import express from "express";
 import cors from "cors";
-import errorHandler from "../../middleware/errorHandler";
+import errorHandler from "../middleware/errorHandler";
 import router from "../../Infrastructure/http/routes/index";
 
 const app = express();

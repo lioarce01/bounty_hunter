@@ -9,8 +9,16 @@ export class GetReportByUserId {
     private reportRepository: ReportRepository
   ) {}
 
-  async execute(userId: string): Promise<Report[] | null> {
-    const reports = await this.reportRepository.getReportByUserId(userId);
+  async execute(
+    userId: string,
+    offset?: number,
+    limit?: number
+  ): Promise<Report[] | null> {
+    const reports = await this.reportRepository.getReportByUserId(
+      userId,
+      offset,
+      limit
+    );
 
     return reports;
   }
