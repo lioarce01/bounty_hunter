@@ -1,18 +1,26 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline for API
 
 on:
   push:
     branches:
       - main
       - dev
+    paths:
+      - "api/**"
   pull_request:
     branches:
       - main
       - dev
+    paths:
+      - "api/**"
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,9 +35,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Generate Prisma Client
-        run: pnpm run prisma:generate
 
       - name: Build the project
         run: pnpm run build
